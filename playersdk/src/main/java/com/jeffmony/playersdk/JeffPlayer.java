@@ -19,7 +19,7 @@ public class JeffPlayer implements IPlayer {
     private BasePlayerImpl mPlayerImpl;
 
     public JeffPlayer(Context context) {
-        this(context, PlayerType.EXO_PLAYER);
+        this(context, PlayerType.IJK_PLAYER);
     }
 
     public JeffPlayer(Context context, PlayerType type) {
@@ -123,6 +123,11 @@ public class JeffPlayer implements IPlayer {
     @Override
     public void setOnErrorListener(OnErrorListener listener) {
         mPlayerImpl.setOnErrorListener(listener);
+    }
+
+    @Override
+    public void setOnRendListener(OnRendListener listener) {
+        mPlayerImpl.setOnRendListener(listener);
     }
 
     @Override

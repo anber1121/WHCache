@@ -10,6 +10,8 @@ import com.jeffmony.playersdk.common.SeekType;
 import java.io.IOException;
 import java.util.Map;
 
+import tv.danmaku.ijk.media.player.IjkTimedText;
+
 public interface IPlayer {
 
     void initPlayerSettings(PlayerSettings settings);
@@ -51,6 +53,8 @@ public interface IPlayer {
 
     void setOnErrorListener(OnErrorListener listener);
 
+    void setOnRendListener(OnRendListener listener);
+
     void setOnCompletionListener(OnCompletionListener listener);
 
     void setOnProxyCacheInfoListener(OnProxyCacheInfoListener listener);
@@ -72,6 +76,10 @@ public interface IPlayer {
 
     interface OnErrorListener {
         void onError(int what, String msg);
+    }
+
+    interface OnRendListener {
+        void onRend(String text);
     }
 
     interface OnProxyCacheInfoListener {

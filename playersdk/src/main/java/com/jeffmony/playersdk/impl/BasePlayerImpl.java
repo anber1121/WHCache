@@ -18,12 +18,15 @@ import com.jeffmony.videocache.utils.VideoProxyThreadUtils;
 import java.io.IOException;
 import java.util.Map;
 
+import tv.danmaku.ijk.media.player.IjkTimedText;
+
 public abstract class BasePlayerImpl {
 
     protected Context mContext;
     private IPlayer.OnPreparedListener mOnPreparedListener;
     private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     private IPlayer.OnErrorListener mOnErrorListener;
+    private IPlayer.OnRendListener mOnRendListener;
     private IPlayer.OnCompletionListener mOnCompletionListener;
     private IPlayer.OnProxyCacheInfoListener mOnProxyCacheInfoListener;
 
@@ -84,6 +87,10 @@ public abstract class BasePlayerImpl {
         mOnErrorListener = listener;
     }
 
+    public void setOnRendListener(IPlayer.OnRendListener listener) {
+        mOnRendListener = listener;
+    }
+
     public void setOnCompletionListener(IPlayer.OnCompletionListener listener) {
         mOnCompletionListener = listener;
     }
@@ -115,6 +122,14 @@ public abstract class BasePlayerImpl {
         VideoProxyThreadUtils.runOnUiThread(() -> {
             if (mOnErrorListener != null) {
                 mOnErrorListener.onError(what, msg);
+            }
+        });
+    }
+
+    protected void notifyOnRend(IjkTimedText text) {
+        VideoProxyThreadUtils.runOnUiThread(() -> {
+            if (mOnRendListener != null) {
+                mOnRendListener.onRend(text.getText());
             }
         });
     }

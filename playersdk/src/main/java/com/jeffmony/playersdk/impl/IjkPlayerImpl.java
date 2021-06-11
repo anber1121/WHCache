@@ -3,6 +3,7 @@ package com.jeffmony.playersdk.impl;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Surface;
 
 import com.jeffmony.playersdk.common.SeekType;
@@ -11,7 +12,9 @@ import com.jeffmony.videocache.utils.ProxyCacheUtils;
 import java.io.IOException;
 import java.util.Map;
 
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkTimedText;
 
 public class IjkPlayerImpl extends BasePlayerImpl {
     private static final String TAG = "IjkPlayerImpl";
@@ -33,6 +36,19 @@ public class IjkPlayerImpl extends BasePlayerImpl {
         mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 10000000);
         mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1);
         mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 16);
+
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "volume", 100);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "af", "loudnorm");
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "vn", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "nodisp", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "sn", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L);
+        mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L);
+
         mIjkPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         initPlayerListeners();
     }
@@ -41,6 +57,7 @@ public class IjkPlayerImpl extends BasePlayerImpl {
         mIjkPlayer.setOnPreparedListener(mOnPreparedListener);
         mIjkPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
         mIjkPlayer.setOnErrorListener(mOnErrorListener);
+        mIjkPlayer.setOnTimedTextListener(onRendListener);
     }
 
     @Override
@@ -53,6 +70,7 @@ public class IjkPlayerImpl extends BasePlayerImpl {
         } else {
             playUrl = uri.toString();
         }
+        Log.e("IjkPlayerImpl","playUrl:"+playUrl);
         mIjkPlayer.setDataSource(context, Uri.parse(playUrl), headers);
     }
 
@@ -162,4 +180,7 @@ public class IjkPlayerImpl extends BasePlayerImpl {
         notifyOnError(what, "" + extra);
         return true;
     };
+
+//    private IMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> Log.e("-xb-","o text"+text.getText());
+    private IMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> notifyOnRend(text);
 }
