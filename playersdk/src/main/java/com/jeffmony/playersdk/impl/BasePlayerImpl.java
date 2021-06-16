@@ -109,7 +109,6 @@ public abstract class BasePlayerImpl {
 
     protected void notifyOnPrepared() {
         VideoProxyThreadUtils.runOnUiThread(() -> {
-            L.d("notifyOnPrepared");
             if (mOnPreparedListener != null) {
                 L.d("notifyOnPrepared mOnPreparedListener!=null");
                 mOnPreparedListener.onPrepared();
@@ -119,7 +118,6 @@ public abstract class BasePlayerImpl {
 
     protected void notifyOnCompletion() {
         VideoProxyThreadUtils.runOnUiThread(() -> {
-            L.d("mOnCompletionListener");
             if (mOnCompletionListener != null) {
                 L.d("mOnCompletionListener mOnCompletionListener!=null");
                 mOnCompletionListener.onCompletion();
@@ -139,7 +137,6 @@ public abstract class BasePlayerImpl {
     }
 
     protected void notifyOnError(int what, String msg) {
-        L.d("notifyOnError");
         VideoProxyThreadUtils.runOnUiThread(() -> {
             if (mOnErrorListener != null) {
                 L.d("notifyOnError mOnErrorListener!=null");
@@ -157,7 +154,6 @@ public abstract class BasePlayerImpl {
     }
 
     protected Boolean notifyOnInfo(int infoCode, int msg) {
-        L.d("notifyOnInfo mOnRendListener!=null");
         VideoProxyThreadUtils.runOnUiThread(() -> {
             if (mOnInfoListener != null) {
                 L.d("notifyOnInfo mOnInfoListener!=null");
