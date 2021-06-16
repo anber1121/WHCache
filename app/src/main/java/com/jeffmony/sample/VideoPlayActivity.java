@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.jeffmony.playersdk.IPlayer;
-import com.jeffmony.playersdk.JeffPlayer;
+import com.jeffmony.playersdk.Player;
 import com.jeffmony.playersdk.common.PlayerSettings;
 import com.jeffmony.playersdk.common.PlayerType;
 import com.jeffmony.playersdk.common.SeekType;
@@ -38,7 +38,7 @@ public class VideoPlayActivity extends Activity {
     private String mVideoUrl;
     private int mPlayerType;
     private Surface mSurface;
-    private JeffPlayer mPlayer;
+    private Player mPlayer;
     private Size mScreenSize;
     private int mVideoWidth;
     private int mVideoHeight;
@@ -103,9 +103,9 @@ public class VideoPlayActivity extends Activity {
 
     private void initPlayerSettings() {
         if (mPlayerType == 1) {
-            mPlayer = new JeffPlayer(this.getApplicationContext(), PlayerType.EXO_PLAYER);
+            mPlayer = new Player(this.getApplicationContext(), PlayerType.EXO_PLAYER);
         } else {
-            mPlayer = new JeffPlayer(this.getApplicationContext(), PlayerType.IJK_PLAYER);
+            mPlayer = new Player(this.getApplicationContext(), PlayerType.IJK_PLAYER);
         }
         mPlayer.setSeekType(SeekType.CLOSEST_SYNC);
         PlayerSettings playerSettings = new PlayerSettings();

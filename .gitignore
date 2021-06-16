@@ -4,9 +4,13 @@
 *.ap_
 *.aab
 
+.DS_Store
+node_modules
+.vscode
+.idea
+
 # Files for the ART/Dalvik VM
 *.dex
-
 # Java class files
 *.class
 

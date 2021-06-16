@@ -85,7 +85,7 @@ public class VideoProxyCacheManager {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             VideoCacheInfo cacheInfo = (VideoCacheInfo) msg.obj;
-            IVideoCacheListener cacheListener = mCacheListenerMap.get(cacheInfo.getVideoUrl());
+            IVideoCacheListener cacheListener = mCacheListenerMap.get(cacheInfo.getUniqueID());
             if (cacheListener != null) {
                 switch (msg.what) {
                     case ProxyMessage.MSG_VIDEO_PROXY_ERROR:
@@ -292,10 +292,10 @@ public class VideoProxyCacheManager {
      * @param headers
      */
     private void startM3U8Task(M3U8 m3u8, VideoCacheInfo cacheInfo, Map<String, String> headers) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(cacheInfo.getVideoUrl());
+        VideoCacheTask cacheTask = mCacheTaskMap.get(cacheInfo.getUniqueID());
         if (cacheTask == null) {
             cacheTask = new M3U8CacheTask(cacheInfo, headers, m3u8);
-            mCacheTaskMap.put(cacheInfo.getVideoUrl(), cacheTask);
+            mCacheTaskMap.put(cacheInfo.getUniqueID(), cacheTask);
         }
         startVideoCacheTask(cacheTask, cacheInfo);
     }
@@ -306,10 +306,10 @@ public class VideoProxyCacheManager {
      * @param headers
      */
     private void startNonM3U8Task(VideoCacheInfo cacheInfo, Map<String, String> headers) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(cacheInfo.getVideoUrl());
+        VideoCacheTask cacheTask = mCacheTaskMap.get(cacheInfo.getUniqueID());
         if (cacheTask == null) {
             cacheTask = new Mp4CacheTask(cacheInfo, headers);
-            mCacheTaskMap.put(cacheInfo.getVideoUrl(), cacheTask);
+            mCacheTaskMap.put(cacheInfo.getUniqueID(), cacheTask);
         }
         startVideoCacheTask(cacheTask, cacheInfo);
     }
@@ -330,7 +330,7 @@ public class VideoProxyCacheManager {
                 cacheInfo.setPercent(percent);
                 cacheInfo.setCachedSize(cachedSize);
                 cacheInfo.setSpeed(speed);
-                mCacheInfoMap.put(cacheInfo.getVideoUrl(), cacheInfo);
+                mCacheInfoMap.put(cacheInfo.getUniqueID(), cacheInfo);
                 mProxyHandler.obtainMessage(ProxyMessage.MSG_VIDEO_PROXY_PROGRESS, cacheInfo).sendToTarget();
             }
 
@@ -341,7 +341,7 @@ public class VideoProxyCacheManager {
                 cacheInfo.setCachedSize(cachedSize);
                 cacheInfo.setSpeed(speed);
                 cacheInfo.setTsLengthMap(tsLengthMap);
-                mCacheInfoMap.put(cacheInfo.getVideoUrl(), cacheInfo);
+                mCacheInfoMap.put(cacheInfo.getUniqueID(), cacheInfo);
                 mProxyHandler.obtainMessage(ProxyMessage.MSG_VIDEO_PROXY_PROGRESS, cacheInfo).sendToTarget();
             }
 
@@ -363,7 +363,7 @@ public class VideoProxyCacheManager {
                     notifyLocalProxyLock(lock);
                 }
                 cacheInfo.setTotalSize(totalSize);
-                mCacheInfoMap.put(cacheInfo.getVideoUrl(), cacheInfo);
+                mCacheInfoMap.put(cacheInfo.getUniqueID(), cacheInfo);
                 mProxyHandler.obtainMessage(ProxyMessage.MSG_VIDEO_PROXY_COMPLETED, cacheInfo).sendToTarget();
             }
         });

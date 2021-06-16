@@ -78,11 +78,17 @@ public class ProxyCacheUtils {
     public static String computeMD5(String string) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            byte[] digestBytes = messageDigest.digest(string.getBytes());
+            byte[] digestBytes = messageDigest.digest(computeSub(string).getBytes());
             return bytesToHexString(digestBytes);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static String computeSub(String string) {
+        int endUrl = string.indexOf("?dis_k=");
+//        return string;
+        return string.substring(0,endUrl>0?endUrl:string.length());
     }
 
     //当前mimetype是否是M3U8类型
@@ -109,15 +115,17 @@ public class ProxyCacheUtils {
     }
 
     public static String encodeUriWithBase64(String str) {
-        try {
-            return Base64.encodeToString(str.getBytes("utf-8"), Base64.NO_WRAP | Base64.NO_PADDING);
-        } catch (Exception e) {
-            return str;
-        }
+        return str;
+//        try {
+//            return Base64.encodeToString(str.getBytes("utf-8"), Base64.NO_WRAP | Base64.NO_PADDING);
+//        } catch (Exception e) {
+//            return str;
+//        }
     }
 
     public static String decodeUriWithBase64(String str) {
-        return new String(Base64.decode(str, Base64.NO_WRAP | Base64.NO_PADDING));
+        return str;
+//        return new String(Base64.decode(str, Base64.NO_WRAP | Base64.NO_PADDING));
     }
 
     public static String map2Str(Map<String, String> headers) {
@@ -189,7 +197,7 @@ public class ProxyCacheUtils {
     public static String getProxyUrl(String videoUrl, Map<String, String> headers, Map<String, Object> cacheParams) {
         String videoInfo = getVideoTypeInfo(videoUrl, cacheParams);
         String headerStr = map2Str(headers);
-        String proxyExtraInfo = videoUrl + VIDEO_PROXY_SPLIT_STR + videoInfo + VIDEO_PROXY_SPLIT_STR + headerStr;
+        String proxyExtraInfo = computeSub(videoUrl) + VIDEO_PROXY_SPLIT_STR + videoInfo + VIDEO_PROXY_SPLIT_STR + headerStr;
         //http://127.0.0.1:port/base64-parameter
         String proxyUrl = String.format(Locale.US, "http://%s:%d/%s", LOCAL_PROXY_HOST, sLocalPort, encodeUriWithBase64(proxyExtraInfo));
         return proxyUrl;

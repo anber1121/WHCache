@@ -1,5 +1,7 @@
 package com.jeffmony.videocache.model;
 
+import com.jeffmony.videocache.utils.ProxyCacheUtils;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,6 +36,10 @@ public class VideoCacheInfo implements Serializable {
 
     public String getVideoUrl() {
         return mVideoUrl;
+    }
+
+    public String getUniqueID() {
+        return ProxyCacheUtils.computeSub(mVideoUrl);
     }
 
     public void setVideoType(int type) {
