@@ -19,6 +19,7 @@ public class M3U8Seg implements Comparable<M3U8Seg> {
     private String mUrl;                   //分片的网络url
     private String mName;                  //分片的文件名
     private float mDuration;               //分片的时长
+    private String mByteRange;               //分片的时长
     private int mSegIndex;                 //分片索引位置，起始索引为0
     private long mFileSize;                //分片文件大小
     private long mContentLength;           //分片文件的网络请求的content-length
@@ -56,6 +57,14 @@ public class M3U8Seg implements Comparable<M3U8Seg> {
 
     public void setDuration(float duration) {
         mDuration = duration;
+    }
+
+    public String getByteRange() {
+        return mByteRange;
+    }
+
+    public void setByteRange(String byteRange) {
+        mByteRange = byteRange;
     }
 
     public int getSegIndex() {

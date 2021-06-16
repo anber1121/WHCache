@@ -1,6 +1,7 @@
 package com.jeffmony.videocache.task;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.jeffmony.videocache.common.VideoCacheException;
 import com.jeffmony.videocache.m3u8.M3U8;
@@ -224,13 +225,31 @@ public class M3U8CacheTask extends VideoCacheTask {
     private void saveSegFile(InputStream inputStream, File file, long contentLength, M3U8Seg seg, String downloadUrl) throws Exception {
         FileOutputStream fos = null;
         long totalLength = 0;
+        String byteRange = seg.getByteRange();
         try {
             fos = new FileOutputStream(file);
             int len;
             byte[] buf = new byte[StorageUtils.DEFAULT_BUFFER_SIZE];
-            while ((len = inputStream.read(buf)) != -1) {
-                totalLength += len;
-                fos.write(buf, 0, len);
+            if(byteRange != null){
+                int fileLength = Integer.parseInt(byteRange.substring(0,byteRange.indexOf("@")));
+                long offLengt = Long.parseLong(byteRange.substring(byteRange.indexOf("@")+1));
+                Log.e("-xb-","file:"+file.getAbsolutePath()+"  fileLength:"+fileLength+"  offLengt:"+offLengt);
+                if(offLengt>0){
+                    inputStream.skip(offLengt);
+                }
+                while (fileLength > totalLength && (len = inputStream.read(buf)) != -1) {
+                    totalLength += len;
+                    if(totalLength > fileLength){
+                        len = (int) (totalLength - fileLength);
+                        totalLength = fileLength;
+                    }
+                    fos.write(buf, 0, len);
+                }
+            } else {
+                while ((len = inputStream.read(buf)) != -1) {
+                    totalLength += len;
+                    fos.write(buf, 0, len);
+                }
             }
             if (contentLength > 0 && contentLength == totalLength) {
                 seg.setContentLength(contentLength);

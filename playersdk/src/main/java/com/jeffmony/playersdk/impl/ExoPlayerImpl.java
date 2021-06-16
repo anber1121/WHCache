@@ -105,6 +105,11 @@ public class ExoPlayerImpl extends BasePlayerImpl {
     }
 
     @Override
+    public void setVolume(float v1, float v2) throws IllegalStateException {
+        //TODO
+    }
+
+    @Override
     public void pause() throws IllegalStateException {
 //        if (mPlayerSettings.getLocalProxyEnable()) {
 //            mLocalProxyVideoControl.pauseLocalProxyTask();

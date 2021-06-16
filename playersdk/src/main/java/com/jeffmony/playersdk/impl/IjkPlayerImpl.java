@@ -8,6 +8,7 @@ import android.view.Surface;
 
 import com.jeffmony.playersdk.common.SeekType;
 import com.jeffmony.videocache.utils.ProxyCacheUtils;
+import com.jeffmony.videoplayer.util.L;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     public IjkPlayerImpl(Context context) {
         super(context);
         mIjkPlayer = new IjkMediaPlayer();
-
+        mIjkPlayer.setLogEnabled(true);
         //不用MediaCodec编解码
         mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
         //不用opensles编解码
@@ -107,6 +108,11 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     }
 
     @Override
+    public void setVolume(float v1, float v2) throws IllegalStateException {
+        mIjkPlayer.setVolume(v1, v2);
+    }
+
+    @Override
     public void pause() throws IllegalStateException {
         if (mPlayerSettings.getLocalProxyEnable()) {
             mLocalProxyVideoControl.pauseLocalProxyTask();
@@ -165,6 +171,10 @@ public class IjkPlayerImpl extends BasePlayerImpl {
 
     private IjkMediaPlayer.OnPreparedListener mOnPreparedListener = mp -> notifyOnPrepared();
 
+    private IjkMediaPlayer.OnCompletionListener mCompletionListener = mp -> notifyOnCompletion();
+
+    private IjkMediaPlayer.OnInfoListener mOnInfoListener = (mp, infoCode, msg) -> notifyOnInfo(infoCode, msg);
+
     private IjkMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener = (mp, width, height, sar_num, sar_den) -> notifyOnVideoSizeChanged(width, height, sar_num, sar_den, 0);
 
     private IjkMediaPlayer.OnVideoDarSizeChangedListener mOnVideoDarSizeChangedListener = (mp, width, height, sar_num, sar_den, dar_num, dar_den) -> {
@@ -181,6 +191,5 @@ public class IjkPlayerImpl extends BasePlayerImpl {
         return true;
     };
 
-//    private IMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> Log.e("-xb-","o text"+text.getText());
-    private IMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> notifyOnRend(text);
+    private IjkMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> notifyOnRend(text);
 }

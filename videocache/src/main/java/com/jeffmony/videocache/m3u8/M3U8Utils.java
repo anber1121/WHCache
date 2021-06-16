@@ -64,6 +64,7 @@ public class M3U8Utils {
             String initSegmentUri = null;
             String segmentByteRange = null;
             float segDuration = 0;
+            String ByteRange = null;
             int segIndex = 0;
 
             String line;
@@ -78,6 +79,11 @@ public class M3U8Utils {
                         if (!TextUtils.isEmpty(ret)) {
                             segDuration = Float.parseFloat(ret);
                         }
+                    } else if (line.startsWith(Constants.TAG_BYTE_RANGE)) {
+                        ByteRange = parseStringAttr(line, Constants.REGEX_BYTE_RANGE);
+//                        if (!TextUtils.isEmpty(ret)) {
+//                            ByteRange = String.parseS(ret);
+//                        }
                     } else if (line.startsWith(Constants.TAG_TARGET_DURATION)) {
                         String ret = parseStringAttr(line, Constants.REGEX_TARGET_DURATION);
                         if (!TextUtils.isEmpty(ret)) {
@@ -148,6 +154,9 @@ public class M3U8Utils {
                 seg.setUrl(tempUrl);
                 seg.setSegIndex(segIndex);
                 seg.setDuration(segDuration);
+                if (ByteRange != null) {
+                    seg.setByteRange(ByteRange);
+                }
                 seg.setHasDiscontinuity(hasDiscontinuity);
                 seg.setHasKey(hasKey);
                 if (hasKey) {
@@ -161,6 +170,7 @@ public class M3U8Utils {
                 m3u8.addSeg(seg);
                 segIndex++;
                 segDuration = 0;
+                ByteRange = null;
                 hasDiscontinuity = false;
                 hasKey = false;
                 hasInitSegment = false;
@@ -207,6 +217,7 @@ public class M3U8Utils {
             String initSegmentUri = null;
             String segmentByteRange = null;
             float segDuration = 0;
+            String ByteRange = null;
             int segIndex = 0;
 
             String line;
@@ -221,6 +232,11 @@ public class M3U8Utils {
                         if (!TextUtils.isEmpty(ret)) {
                             segDuration = Float.parseFloat(ret);
                         }
+                    } else if (line.startsWith(Constants.TAG_BYTE_RANGE)) {
+                        ByteRange = parseStringAttr(line, Constants.REGEX_BYTE_RANGE);
+//                        if (!TextUtils.isEmpty(ret)) {
+//                            ByteRange = String.parseS(ret);
+//                        }
                     } else if (line.startsWith(Constants.TAG_TARGET_DURATION)) {
                         String ret = parseStringAttr(line, Constants.REGEX_TARGET_DURATION);
                         if (!TextUtils.isEmpty(ret)) {
@@ -281,6 +297,9 @@ public class M3U8Utils {
                 seg.setUrl(tempUrl);
                 seg.setSegIndex(segIndex);
                 seg.setDuration(segDuration);
+                if (ByteRange != null) {
+                    seg.setByteRange(ByteRange);
+                }
                 seg.setHasDiscontinuity(hasDiscontinuity);
                 seg.setHasKey(hasKey);
                 if (hasKey) {
@@ -294,6 +313,7 @@ public class M3U8Utils {
                 m3u8.addSeg(seg);
                 segIndex++;
                 segDuration = 0;
+                ByteRange = null;
                 hasDiscontinuity = false;
                 hasKey = false;
                 hasInitSegment = false;
@@ -376,6 +396,9 @@ public class M3U8Utils {
                     bfw.write(Constants.TAG_DISCONTINUITY + "\n");
                 }
                 bfw.write(Constants.TAG_MEDIA_DURATION + ":" + m3u8Ts.getDuration() + ",\n");
+                if(m3u8Ts.getByteRange()!=null){
+                    bfw.write(Constants.TAG_BYTE_RANGE + ":" + m3u8Ts.getByteRange() + ",\n");
+                }
                 bfw.write(m3u8Ts.getUrl());
                 bfw.newLine();
             }
@@ -429,6 +452,9 @@ public class M3U8Utils {
                 bfw.write(Constants.TAG_DISCONTINUITY + "\n");
             }
             bfw.write(Constants.TAG_MEDIA_DURATION + ":" + m3u8Ts.getDuration() + ",\n");
+//            if(m3u8Ts.getByteRange()!=null){
+//                bfw.write(Constants.TAG_BYTE_RANGE + ":" + m3u8Ts.getByteRange() + ",\n");
+//            }
             bfw.write(m3u8Ts.getSegProxyUrl(md5, headers) + "\n");
         }
         bfw.write(Constants.TAG_ENDLIST);

@@ -29,6 +29,8 @@ public interface IPlayer {
 
     void stop() throws IllegalStateException;
 
+    void setVolume(float v1, float v2) throws IllegalStateException;
+
     void pause() throws IllegalStateException;
 
     void setSpeed(float speed);
@@ -55,6 +57,8 @@ public interface IPlayer {
 
     void setOnRendListener(OnRendListener listener);
 
+    void setOnInfoListener(OnInfoListener listener);
+
     void setOnCompletionListener(OnCompletionListener listener);
 
     void setOnProxyCacheInfoListener(OnProxyCacheInfoListener listener);
@@ -80,6 +84,10 @@ public interface IPlayer {
 
     interface OnRendListener {
         void onRend(String text);
+    }
+
+    interface OnInfoListener {
+        void onInfo(int infoCode, int msg);
     }
 
     interface OnProxyCacheInfoListener {

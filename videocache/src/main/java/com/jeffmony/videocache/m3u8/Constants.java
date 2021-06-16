@@ -11,6 +11,7 @@ public class Constants {
     public static final String TAG_MEDIA_SEQUENCE = "#EXT-X-MEDIA-SEQUENCE"; // must
     public static final String TAG_TARGET_DURATION = "#EXT-X-TARGETDURATION";                               // must
     public static final String TAG_MEDIA_DURATION = "#EXTINF"; // must
+    public static final String TAG_BYTE_RANGE = "#EXT-X-BYTERANGE"; // must
     public static final String TAG_DISCONTINUITY = "#EXT-X-DISCONTINUITY"; // Optional
     public static final String TAG_ENDLIST = "#EXT-X-ENDLIST"; // It is not live if hls has '#EXT-X-ENDLIST' tag; Or it
     // is.
@@ -27,6 +28,7 @@ public class Constants {
 
     public static final Pattern REGEX_TARGET_DURATION = Pattern.compile(TAG_TARGET_DURATION + ":(\\d+)\\b");
     public static final Pattern REGEX_MEDIA_DURATION = Pattern.compile(TAG_MEDIA_DURATION + ":([\\d\\.]+)\\b");
+    public static final Pattern REGEX_BYTE_RANGE = Pattern.compile(TAG_BYTE_RANGE + ":([\\d\\@]+)\\b");
     public static final Pattern REGEX_VERSION = Pattern.compile(TAG_VERSION + ":(\\d+)\\b");
     public static final Pattern REGEX_MEDIA_SEQUENCE = Pattern.compile(TAG_MEDIA_SEQUENCE + ":(\\d+)\\b");
     public static final Pattern REGEX_BANDWIDTH = Pattern.compile("BANDWIDTH=(\\d+)\\b");

@@ -32,7 +32,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
     implementation project(":videocache")
-    implementation 'com.github.JeffMony.PlayerSDK:exoplayer:4.0.0'
-    implementation 'com.github.JeffMony.PlayerSDK:ijkplayer:4.0.0'
+//    implementation 'com.github.jeffmony.PlayerSDK:exoplayer:4.0.0'
+    implementation project(path: ':ijkplayer')
+//    implementation 'com.github.jeffmony.PlayerSDK:ijkplayer:4.0.0'
 
 }

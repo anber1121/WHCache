@@ -14,6 +14,7 @@ import com.jeffmony.videocache.common.ProxyMessage;
 import com.jeffmony.videocache.common.VideoParams;
 import com.jeffmony.videocache.utils.VideoParamsUtils;
 import com.jeffmony.videocache.utils.VideoProxyThreadUtils;
+import com.jeffmony.videoplayer.util.L;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,6 +28,7 @@ public abstract class BasePlayerImpl {
     private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     private IPlayer.OnErrorListener mOnErrorListener;
     private IPlayer.OnRendListener mOnRendListener;
+    private IPlayer.OnInfoListener mOnInfoListener;
     private IPlayer.OnCompletionListener mOnCompletionListener;
     private IPlayer.OnProxyCacheInfoListener mOnProxyCacheInfoListener;
 
@@ -56,6 +58,8 @@ public abstract class BasePlayerImpl {
     public abstract void start() throws IllegalStateException;
 
     public abstract void stop() throws IllegalStateException;
+
+    public abstract void setVolume(float v1, float v2) throws IllegalStateException;
 
     public abstract void pause() throws IllegalStateException;
 
@@ -91,6 +95,10 @@ public abstract class BasePlayerImpl {
         mOnRendListener = listener;
     }
 
+    public void setOnInfoListener(IPlayer.OnInfoListener listener) {
+        mOnInfoListener = listener;
+    }
+
     public void setOnCompletionListener(IPlayer.OnCompletionListener listener) {
         mOnCompletionListener = listener;
     }
@@ -101,8 +109,20 @@ public abstract class BasePlayerImpl {
 
     protected void notifyOnPrepared() {
         VideoProxyThreadUtils.runOnUiThread(() -> {
+            L.d("notifyOnPrepared");
             if (mOnPreparedListener != null) {
+                L.d("notifyOnPrepared mOnPreparedListener!=null");
                 mOnPreparedListener.onPrepared();
+            }
+        });
+    }
+
+    protected void notifyOnCompletion() {
+        VideoProxyThreadUtils.runOnUiThread(() -> {
+            L.d("mOnCompletionListener");
+            if (mOnCompletionListener != null) {
+                L.d("mOnCompletionListener mOnCompletionListener!=null");
+                mOnCompletionListener.onCompletion();
             }
         });
     }
@@ -119,8 +139,10 @@ public abstract class BasePlayerImpl {
     }
 
     protected void notifyOnError(int what, String msg) {
+        L.d("notifyOnError");
         VideoProxyThreadUtils.runOnUiThread(() -> {
             if (mOnErrorListener != null) {
+                L.d("notifyOnError mOnErrorListener!=null");
                 mOnErrorListener.onError(what, msg);
             }
         });
@@ -132,6 +154,17 @@ public abstract class BasePlayerImpl {
                 mOnRendListener.onRend(text.getText());
             }
         });
+    }
+
+    protected Boolean notifyOnInfo(int infoCode, int msg) {
+        L.d("notifyOnInfo mOnRendListener!=null");
+        VideoProxyThreadUtils.runOnUiThread(() -> {
+            if (mOnInfoListener != null) {
+                L.d("notifyOnInfo mOnInfoListener!=null");
+                mOnInfoListener.onInfo(infoCode, msg);
+            }
+        });
+        return true;
     }
 
     public void notifyOnProxyCacheInfo(int msg, Map<String, Object> params) {
