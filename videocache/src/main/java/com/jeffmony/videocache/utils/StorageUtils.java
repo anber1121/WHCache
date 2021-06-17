@@ -32,6 +32,18 @@ public class StorageUtils {
         return new File(context.getExternalFilesDir("Video"), "jeffmony");
     }
 
+    public static File getCacheDirectory(Context context, String child) {
+        File appCacheDir = new File("/data/data/" + context.getPackageName() + "/files/"+child);
+        if (appCacheDir == null) {
+            appCacheDir = context.getCacheDir();
+        }
+        if (appCacheDir == null) {
+            String cacheDirPath = "/data/data/" + context.getPackageName() + "/cache/";
+            appCacheDir = new File(cacheDirPath);
+        }
+        return appCacheDir;
+    }
+
     public static VideoCacheInfo readVideoCacheInfo(File dir) {
         LogUtils.i(TAG, "readVideoCacheInfo : dir=" + dir.getAbsolutePath());
         File file = new File(dir, INFO_FILE);

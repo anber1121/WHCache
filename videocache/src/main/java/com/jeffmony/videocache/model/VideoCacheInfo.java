@@ -10,6 +10,7 @@ public class VideoCacheInfo implements Serializable {
     private static final long serialVersionUID = 3817171782413324662L;
     private String mVideoUrl;                      //视频的url
     private int mVideoType;                        //视频类型
+    private int mCacheType;                        //缓存模式
     private long mCachedSize;                      //已经缓存的大小，M3U8文件忽略这个变量
     private long mTotalSize;                       //总大小
     private int mCachedTs;                         //已经缓存的ts个数
@@ -40,6 +41,14 @@ public class VideoCacheInfo implements Serializable {
 
     public String getUniqueID() {
         return ProxyCacheUtils.computeSub(mVideoUrl);
+    }
+
+    public void setCacheType(int type) {
+        mCacheType = type;
+    }
+
+    public int getCacheType() {
+        return mCacheType;
     }
 
     public void setVideoType(int type) {

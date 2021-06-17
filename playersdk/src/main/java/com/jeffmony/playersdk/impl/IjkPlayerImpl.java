@@ -56,9 +56,11 @@ public class IjkPlayerImpl extends BasePlayerImpl {
 
     private void initPlayerListeners() {
         mIjkPlayer.setOnPreparedListener(mOnPreparedListener);
-        mIjkPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
-        mIjkPlayer.setOnErrorListener(mOnErrorListener);
         mIjkPlayer.setOnTimedTextListener(onRendListener);
+        mIjkPlayer.setOnErrorListener(mOnErrorListener);
+        mIjkPlayer.setOnInfoListener(mOnInfoListener);
+        mIjkPlayer.setOnCompletionListener(mCompletionListener);
+        mIjkPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
     }
 
     @Override
