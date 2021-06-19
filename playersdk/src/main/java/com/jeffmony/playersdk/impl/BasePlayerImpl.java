@@ -49,6 +49,9 @@ public abstract class BasePlayerImpl {
     public abstract void setDataSource(Context context, Uri uri, Map<String, String> headers)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
+    public abstract void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers)
+            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+
     public abstract void setSeekType(SeekType type);
 
     public abstract void setSurface(Surface surface);

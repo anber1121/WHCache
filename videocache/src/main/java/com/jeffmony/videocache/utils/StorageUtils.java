@@ -20,11 +20,11 @@ public class StorageUtils {
     private static final String TAG = "StorageUtils";
 
     public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
-    public static final String INFO_FILE = "video.info";
+    public static final String INFO_FILE = "audio.info";
     public static final String LOCAL_M3U8_SUFFIX = "_local.m3u8";
     public static final String PROXY_M3U8_SUFFIX = "_proxy.m3u8";
     public static final String M3U8_SUFFIX = ".m3u8";
-    public static final String NON_M3U8_SUFFIX = ".video";
+    public static final String NON_M3U8_SUFFIX = ".audio";
 
     private static final Object sInfoFileLock = new Object();
 
@@ -79,5 +79,56 @@ public class StorageUtils {
         } finally {
             ProxyCacheUtils.close(fos);
         }
+    }
+
+    public static boolean deleteAllFiles(String path) {
+        File file = new File(path);
+        if (!file.exists()) return false;
+        if (file.isFile()) {
+            file.delete();
+            return true;
+        }
+        File[] files = file.listFiles();
+        LogUtils.d("MainActivity", "fileList：" + (files == null ? "files = null" : files.length));
+        if (files == null || files.length == 0) return false;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                LogUtils.d("MainActivity", "isDirectory");
+                deleteAllFiles(f.getAbsolutePath());
+            } else {
+                LogUtils.d("MainActivity", "deleteFile：" + f.getAbsolutePath());
+                f.delete();
+            }
+        }
+        return true;
+    }
+
+    public static boolean deleteFile(int cachemode) {
+        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
+        if (!file.exists()) return false;
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (!f.exists()) return false;
+            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
+            if (videoCacheInfo.getCacheType() == cachemode) {
+                deleteAllFiles(f.getAbsolutePath());
+            }
+        }
+        return true;
+    }
+
+    public static boolean deleteFile(String albumId) {
+        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
+        if (!file.exists()) return false;
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (!f.exists()) return false;
+            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
+            if (videoCacheInfo == null) return false;
+            if (videoCacheInfo.getAlbumId() == albumId) {
+                deleteAllFiles(f.getAbsolutePath());
+            }
+        }
+        return true;
     }
 }

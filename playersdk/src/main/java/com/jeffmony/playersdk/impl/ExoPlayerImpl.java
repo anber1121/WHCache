@@ -28,6 +28,7 @@ import com.jeffmony.playersdk.common.SeekType;
 import com.jeffmony.videocache.utils.LogUtils;
 import com.jeffmony.videocache.utils.ProxyCacheUtils;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class ExoPlayerImpl extends BasePlayerImpl {
@@ -62,6 +63,11 @@ public class ExoPlayerImpl extends BasePlayerImpl {
 //            playUrl = uri.toString();
 //        }
 //        mMediaSource = createMediaSource(Uri.parse(playUrl), null);
+    }
+
+    @Override
+    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+
     }
 
     @Override

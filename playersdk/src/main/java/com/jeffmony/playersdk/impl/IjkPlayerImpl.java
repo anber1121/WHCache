@@ -7,15 +7,13 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.jeffmony.playersdk.common.SeekType;
+import com.jeffmony.videocache.common.CacheType;
 import com.jeffmony.videocache.utils.ProxyCacheUtils;
-import com.jeffmony.videoplayer.util.L;
 
 import java.io.IOException;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkTimedText;
 
 public class IjkPlayerImpl extends BasePlayerImpl {
     private static final String TAG = "IjkPlayerImpl";
@@ -64,12 +62,26 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     }
 
     @Override
+    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+        String playUrl;
+        if (mPlayerSettings.getLocalProxyEnable()) {
+            playUrl = ProxyCacheUtils.getProxyUrl(uri.toString(), null, null);
+            //请求放在客户端,非常便于控制
+            mLocalProxyVideoControl.startRequestVideoInfo(uri.toString(), cacheMode, albumId,null, null);
+        } else {
+            playUrl = uri.toString();
+        }
+        Log.e("IjkPlayerImpl","playUrl:"+playUrl);
+        mIjkPlayer.setDataSource(context, Uri.parse(playUrl), headers);
+    }
+
+    @Override
     public void setDataSource(Context context, Uri uri, Map<String, String> headers) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
         String playUrl;
         if (mPlayerSettings.getLocalProxyEnable()) {
             playUrl = ProxyCacheUtils.getProxyUrl(uri.toString(), null, null);
             //请求放在客户端,非常便于控制
-            mLocalProxyVideoControl.startRequestVideoInfo(uri.toString(), null, null);
+            mLocalProxyVideoControl.startRequestVideoInfo(uri.toString(),null, null);
         } else {
             playUrl = uri.toString();
         }

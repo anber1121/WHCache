@@ -6,3 +6,4 @@ public enum SeekType {
     PREVIOUS_SYNC,
     NEXT_SYNC
 }
+

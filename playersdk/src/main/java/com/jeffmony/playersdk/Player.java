@@ -41,6 +41,11 @@ public class Player implements IPlayer {
     }
 
     @Override
+    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        mPlayerImpl.setDataSource(context, uri, cacheMode, albumId, headers);
+    }
+
+    @Override
     public void setSeekType(SeekType type) {
         mPlayerImpl.setSeekType(type);
     }

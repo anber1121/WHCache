@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.jeffmony.videocache.common.CacheType;
 import com.jeffmony.videocache.common.ProxyMessage;
 import com.jeffmony.videocache.common.VideoCacheConfig;
 import com.jeffmony.videocache.common.VideoCacheException;
@@ -86,7 +87,9 @@ public class VideoProxyCacheManager {
             super.handleMessage(msg);
             VideoCacheInfo cacheInfo = (VideoCacheInfo) msg.obj;
             IVideoCacheListener cacheListener = mCacheListenerMap.get(cacheInfo.getUniqueID());
+            LogUtils.i(TAG, "handleMessage msg.what:"+msg.what);
             if (cacheListener != null) {
+                LogUtils.i(TAG, "handleMessage cacheListener :"+cacheListener.toString());
                 switch (msg.what) {
                     case ProxyMessage.MSG_VIDEO_PROXY_ERROR:
                         cacheListener.onCacheError(cacheInfo, 0);
@@ -167,11 +170,11 @@ public class VideoProxyCacheManager {
         if (TextUtils.isEmpty(videoUrl)) {
             return;
         }
-        mCacheListenerMap.put(videoUrl, listener);
+        mCacheListenerMap.put(ProxyCacheUtils.computeSub(videoUrl), listener);
     }
 
     public void removeCacheListener(String videoUrl) {
-        mCacheListenerMap.remove(videoUrl);
+        mCacheListenerMap.remove(ProxyCacheUtils.computeSub(videoUrl));
     }
 
     public void releaseProxyReleases(String videoUrl) {
@@ -185,8 +188,8 @@ public class VideoProxyCacheManager {
      *
      * @param videoUrl  视频url
      */
-    public void startRequestVideoInfo(String videoUrl) {
-        startRequestVideoInfo(videoUrl, new HashMap<>());
+    public void startRequestVideoInfo(String videoUrl, String albumId, int cacheMode) {
+        startRequestVideoInfo(videoUrl, cacheMode, albumId,new HashMap<>());
     }
 
     /**
@@ -194,8 +197,8 @@ public class VideoProxyCacheManager {
      * @param videoUrl 视频url
      * @param headers  请求的头部信息
      */
-    public void startRequestVideoInfo(String videoUrl, Map<String, String> headers) {
-        startRequestVideoInfo(videoUrl, headers, new HashMap<>());
+    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, Map<String, String> headers) {
+        startRequestVideoInfo(videoUrl, cacheMode, albumId, headers, new HashMap<>());
     }
 
     /**
@@ -205,7 +208,7 @@ public class VideoProxyCacheManager {
      * @param extraParams 额外参数，这个map很有用，例如我已经知道当前请求视频的类型和长度，都可以在extraParams中设置,
      *                    详情见VideoParams
      */
-    public void startRequestVideoInfo(String videoUrl, Map<String, String> headers, Map<String, Object> extraParams) {
+    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, Map<String, String> headers, Map<String, Object> extraParams) {
         String md5 = ProxyCacheUtils.computeMD5(videoUrl);
         File saveDir = new File(ProxyCacheUtils.getConfig().getFilePath(), md5);
         if (!saveDir.exists()) {
@@ -217,6 +220,8 @@ public class VideoProxyCacheManager {
             //之前没有缓存信息
             videoCacheInfo = new VideoCacheInfo(videoUrl);
             videoCacheInfo.setMd5(md5);
+            videoCacheInfo.setCacheType(cacheMode);
+            videoCacheInfo.setAlbumId(albumId);
             videoCacheInfo.setSavePath(saveDir.getAbsolutePath());
 
             final Object lock = VideoLockManager.getInstance().getLock(md5);
@@ -257,6 +262,9 @@ public class VideoProxyCacheManager {
                 }
             });
         } else {
+            if(cacheMode == CacheType.DOWN_CACHE){
+                videoCacheInfo.setCacheType(CacheType.DOWN_CACHE);
+            }
             if (videoCacheInfo.getVideoType() == VideoType.M3U8_TYPE) {
                 //说明视频类型是M3U8类型
                 final Object lock = VideoLockManager.getInstance().getLock(md5);
