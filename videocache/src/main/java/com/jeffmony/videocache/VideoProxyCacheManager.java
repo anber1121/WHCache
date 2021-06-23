@@ -87,9 +87,7 @@ public class VideoProxyCacheManager {
             super.handleMessage(msg);
             VideoCacheInfo cacheInfo = (VideoCacheInfo) msg.obj;
             IVideoCacheListener cacheListener = mCacheListenerMap.get(cacheInfo.getUniqueID());
-            LogUtils.i(TAG, "handleMessage msg.what:"+msg.what);
             if (cacheListener != null) {
-                LogUtils.i(TAG, "handleMessage cacheListener :"+cacheListener.toString());
                 switch (msg.what) {
                     case ProxyMessage.MSG_VIDEO_PROXY_ERROR:
                         cacheListener.onCacheError(cacheInfo, 0);
@@ -188,8 +186,8 @@ public class VideoProxyCacheManager {
      *
      * @param videoUrl  视频url
      */
-    public void startRequestVideoInfo(String videoUrl, String albumId, int cacheMode) {
-        startRequestVideoInfo(videoUrl, cacheMode, albumId,new HashMap<>());
+    public void startRequestVideoInfo(String videoUrl, String albumId, String trackId, int cacheMode) {
+        startRequestVideoInfo(videoUrl, cacheMode, albumId, trackId, new HashMap<>());
     }
 
     /**
@@ -197,8 +195,8 @@ public class VideoProxyCacheManager {
      * @param videoUrl 视频url
      * @param headers  请求的头部信息
      */
-    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, Map<String, String> headers) {
-        startRequestVideoInfo(videoUrl, cacheMode, albumId, headers, new HashMap<>());
+    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, String trackId, Map<String, String> headers) {
+        startRequestVideoInfo(videoUrl, cacheMode, albumId, trackId, headers, new HashMap<>());
     }
 
     /**
@@ -208,7 +206,7 @@ public class VideoProxyCacheManager {
      * @param extraParams 额外参数，这个map很有用，例如我已经知道当前请求视频的类型和长度，都可以在extraParams中设置,
      *                    详情见VideoParams
      */
-    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, Map<String, String> headers, Map<String, Object> extraParams) {
+    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, String trackId, Map<String, String> headers, Map<String, Object> extraParams) {
         String md5 = ProxyCacheUtils.computeMD5(videoUrl);
         File saveDir = new File(ProxyCacheUtils.getConfig().getFilePath(), md5);
         if (!saveDir.exists()) {
@@ -222,6 +220,7 @@ public class VideoProxyCacheManager {
             videoCacheInfo.setMd5(md5);
             videoCacheInfo.setCacheType(cacheMode);
             videoCacheInfo.setAlbumId(albumId);
+            videoCacheInfo.setTrackId(trackId);
             videoCacheInfo.setSavePath(saveDir.getAbsolutePath());
 
             final Object lock = VideoLockManager.getInstance().getLock(md5);
@@ -384,17 +383,17 @@ public class VideoProxyCacheManager {
      * @param url
      */
     public void pauseCacheTask(String url) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             cacheTask.pauseCacheTask();
         }
     }
 
     public void stopCacheTask(String url) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             cacheTask.stopCacheTask();
-            mCacheTaskMap.remove(url);
+            mCacheTaskMap.remove(ProxyCacheUtils.computeSub(url));
         }
     }
 
@@ -403,7 +402,7 @@ public class VideoProxyCacheManager {
      * @param url
      */
     public void resumeCacheTask(String url) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             cacheTask.resumeCacheTask();
         }
@@ -416,7 +415,7 @@ public class VideoProxyCacheManager {
      * @param percent
      */
     public void seekToCacheTaskFromClient(String url, float percent) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             //当前seek到什么position在客户端不知道
             addVideoSeekInfo(url);
@@ -494,7 +493,7 @@ public class VideoProxyCacheManager {
 
         final boolean seekByServer = shouldSeek;
         VideoProxyThreadUtils.runOnUiThread(() -> {
-            VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+            VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
             if (cacheTask != null && seekByServer) {
                 cacheTask.seekToCacheTaskFromServer(startPosition);
             }
@@ -517,7 +516,7 @@ public class VideoProxyCacheManager {
         }
         final boolean seekByServer = shouldSeek;
         VideoProxyThreadUtils.runOnUiThread(() -> {
-            VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+            VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
             if (cacheTask != null && seekByServer) {
                 cacheTask.seekToCacheTaskFromServer(segIndex);
             }
@@ -535,7 +534,7 @@ public class VideoProxyCacheManager {
             //说明也没有seek 操作
             return true;
         }
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             return cacheTask.isMp4PositionSegExisted(startPosition);
         }
@@ -548,7 +547,7 @@ public class VideoProxyCacheManager {
      * @return
      */
     public boolean isMp4Completed(String url) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             return cacheTask.isMp4Completed();
         }
@@ -562,7 +561,7 @@ public class VideoProxyCacheManager {
      * @return
      */
     public boolean isMp4CompletedFromPosition(String url, long position) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             return cacheTask.isMp4CompletedFromPosition(position);
         }
@@ -576,7 +575,7 @@ public class VideoProxyCacheManager {
      * @return
      */
     public boolean shouldWriteResponseData(String url, long position) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             return cacheTask.isMp4PositionSegExisted(position);
         }
@@ -584,7 +583,7 @@ public class VideoProxyCacheManager {
     }
 
     public long getMp4CachedPosition(String url, long position) {
-        VideoCacheTask cacheTask = mCacheTaskMap.get(url);
+        VideoCacheTask cacheTask = mCacheTaskMap.get(ProxyCacheUtils.computeSub(url));
         if (cacheTask != null) {
             return cacheTask.getMp4CachedPosition(position);
         }
@@ -641,7 +640,7 @@ public class VideoProxyCacheManager {
             if (TextUtils.isEmpty(url)) {
                 continue;
             }
-            VideoCacheInfo cacheInfo = mCacheInfoMap.get(url);
+            VideoCacheInfo cacheInfo = mCacheInfoMap.get(ProxyCacheUtils.computeSub(url));
             if (cacheInfo != null && TextUtils.equals(cacheInfo.getMd5(), m3u8Md5)) {
                 Map<Integer, Long> tsLengthMap = cacheInfo.getTsLengthMap();
                 if (tsLengthMap != null) {
@@ -662,7 +661,7 @@ public class VideoProxyCacheManager {
             if (TextUtils.isEmpty(url)) {
                 continue;
             }
-            VideoCacheInfo cacheInfo = mCacheInfoMap.get(url);
+            VideoCacheInfo cacheInfo = mCacheInfoMap.get(ProxyCacheUtils.computeSub(url));
             if (cacheInfo != null && TextUtils.equals(cacheInfo.getMd5(), md5)) {
                 return cacheInfo.getTotalSize();
             }

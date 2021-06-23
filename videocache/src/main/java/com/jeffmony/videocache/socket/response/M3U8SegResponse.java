@@ -23,7 +23,7 @@ import java.util.Map;
  * @author jeffmony
  * M3U8-TS视频的local server端
  *
- * https://iqiyi.cdn9-okzy.com/20210217/22550_b228d68b/1000k/hls/6f2ac117eac000000.ts&jeffmony_seg&/c462e3fd379ce23333aabed0a3837848/0.ts&jeffmony_seg&unknown
+ * https://iqiyi.cdn9-okzy.com/20210217/22550_b228d68b/1000k/hls/6f2ac117eac000000.ts&tencent_seg&/c462e3fd379ce23333aabed0a3837848/0.ts&tencent_seg&unknown
  */
 public class M3U8SegResponse extends BaseResponse {
 

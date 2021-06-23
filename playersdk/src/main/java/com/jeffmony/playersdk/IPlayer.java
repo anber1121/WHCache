@@ -19,7 +19,7 @@ public interface IPlayer {
     void setDataSource(Context context, Uri uri, Map<String, String> headers)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
-    void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers)
+    void setDataSource(Context context, Uri uri, int cacheMode, String albumId, String trackId, Map<String, String> headers)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
     void setSeekType(SeekType type);

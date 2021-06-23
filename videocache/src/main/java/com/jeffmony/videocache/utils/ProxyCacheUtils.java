@@ -25,9 +25,9 @@ public class ProxyCacheUtils {
 
     public static final String LOCAL_PROXY_HOST = "127.0.0.1";
     public static final String LOCAL_PROXY_URL = "http://" + LOCAL_PROXY_HOST;
-    public static final String SEG_PROXY_SPLIT_STR = "&jeffmony_seg&";           //M3U8 分片文件分隔符
-    public static final String VIDEO_PROXY_SPLIT_STR = "&jeffmony_video&";       //视频分隔符
-    public static final String HEADER_SPLIT_STR = "&jeffmony_header&";           //请求头部分隔符
+    public static final String SEG_PROXY_SPLIT_STR = "&tencent_seg&";           //M3U8 分片文件分隔符
+    public static final String VIDEO_PROXY_SPLIT_STR = "&tencent_video&";       //视频分隔符
+    public static final String HEADER_SPLIT_STR = "&tencent_header&";           //请求头部分隔符
     public static final String UNKNOWN = "unknown";
     public static final String M3U8 = "m3u8";
     public static final String NON_M3U8 = "non_m3u8";
@@ -115,17 +115,15 @@ public class ProxyCacheUtils {
     }
 
     public static String encodeUriWithBase64(String str) {
-        return str;
-//        try {
-//            return Base64.encodeToString(str.getBytes("utf-8"), Base64.NO_WRAP | Base64.NO_PADDING);
-//        } catch (Exception e) {
-//            return str;
-//        }
+        try {
+            return Base64.encodeToString(str.getBytes("utf-8"), Base64.NO_WRAP | Base64.NO_PADDING);
+        } catch (Exception e) {
+            return str;
+        }
     }
 
     public static String decodeUriWithBase64(String str) {
-        return str;
-//        return new String(Base64.decode(str, Base64.NO_WRAP | Base64.NO_PADDING));
+        return new String(Base64.decode(str, Base64.NO_WRAP | Base64.NO_PADDING));
     }
 
     public static String map2Str(Map<String, String> headers) {

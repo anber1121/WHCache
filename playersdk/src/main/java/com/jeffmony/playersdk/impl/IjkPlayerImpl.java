@@ -62,12 +62,12 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     }
 
     @Override
-    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, String trackId, Map<String, String> headers) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
         String playUrl;
         if (mPlayerSettings.getLocalProxyEnable()) {
             playUrl = ProxyCacheUtils.getProxyUrl(uri.toString(), null, null);
             //请求放在客户端,非常便于控制
-            mLocalProxyVideoControl.startRequestVideoInfo(uri.toString(), cacheMode, albumId,null, null);
+            mLocalProxyVideoControl.startRequestVideoInfo(uri.toString(), cacheMode, albumId, trackId, null, null);
         } else {
             playUrl = uri.toString();
         }

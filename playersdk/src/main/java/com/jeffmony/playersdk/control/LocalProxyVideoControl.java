@@ -61,18 +61,18 @@ public class LocalProxyVideoControl {
         mPlayer = player;
     }
 
-    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, Map<String, String> headers, Map<String, Object> extraParams) {
+    public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, String trackId, Map<String, String> headers, Map<String, Object> extraParams) {
         mVideoUrl = videoUrl;
         VideoProxyCacheManager.getInstance().addCacheListener(videoUrl, mListener);
         VideoProxyCacheManager.getInstance().setPlayingUrlMd5(ProxyCacheUtils.computeMD5(videoUrl));
-        VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, cacheMode, albumId, headers, extraParams);
+        VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, cacheMode, albumId, trackId, headers, extraParams);
     }
 
     public void startRequestVideoInfo(String videoUrl, Map<String, String> headers, Map<String, Object> extraParams) {
         mVideoUrl = videoUrl;
         VideoProxyCacheManager.getInstance().addCacheListener(videoUrl, mListener);
         VideoProxyCacheManager.getInstance().setPlayingUrlMd5(ProxyCacheUtils.computeMD5(videoUrl));
-        VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, CacheType.UNKNOWN, null, headers, extraParams);
+        VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, CacheType.UNKNOWN, null, null, headers, extraParams);
     }
 
     public void pauseLocalProxyTask() {

@@ -66,7 +66,7 @@ public class ExoPlayerImpl extends BasePlayerImpl {
     }
 
     @Override
-    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri, int cacheMode, String albumId, String trackId, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
 
     }
 

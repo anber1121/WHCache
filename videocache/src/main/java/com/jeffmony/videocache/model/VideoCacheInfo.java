@@ -11,7 +11,8 @@ public class VideoCacheInfo implements Serializable {
     private String mVideoUrl;                      //视频的url
     private int mVideoType;                        //视频类型
     private int mCacheType;                        //缓存模式
-    private String mAlbumId;                          //专辑
+    private String mAlbumId;                       //专辑
+    private String mTrackId;                       //TrackId
     private long mCachedSize;                      //已经缓存的大小，M3U8文件忽略这个变量
     private long mTotalSize;                       //总大小
     private int mCachedTs;                         //已经缓存的ts个数
@@ -97,6 +98,10 @@ public class VideoCacheInfo implements Serializable {
     public void setAlbumId(String albumId) { mAlbumId = albumId; }
 
     public String getAlbumId() { return mAlbumId; }
+
+    public void setTrackId(String trackId) { mTrackId = trackId; }
+
+    public String getTrackId() { return mTrackId; }
 
     public void setSavePath(String savePath) { mSavePath = savePath; }
 
