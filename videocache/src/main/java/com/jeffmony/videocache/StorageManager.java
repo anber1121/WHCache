@@ -9,6 +9,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.jeffmony.videocache.common.CacheType;
+import com.jeffmony.videocache.model.VideoCacheInfo;
 import com.jeffmony.videocache.utils.LogUtils;
 import com.jeffmony.videocache.utils.StorageUtils;
 
@@ -120,7 +122,10 @@ public class StorageManager {
     }
 
     public void initCacheInfo() {
-        mCacheCleanHandler.obtainMessage(MSG_INIT_CACHE).sendToTarget();
+        mCacheCleanHandler.removeMessages(MSG_INIT_CACHE);
+        Message msg = new Message();
+        msg.what = MSG_INIT_CACHE;
+        mCacheCleanHandler.sendMessageDelayed(msg,5000);
     }
 
     private void initCacheInfoInternal() {
@@ -137,8 +142,11 @@ public class StorageManager {
         File[] files = rootFile.listFiles();
         if (files == null) return;
         for (File itemFile : files) {
-            CacheFileInfo cacheFileInfo = new CacheFileInfo(itemFile.getAbsolutePath(), itemFile.lastModified(), StorageUtils.getTotalSize(itemFile));
-            addCache(cacheFileInfo.mFilePath, cacheFileInfo);
+            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(itemFile);
+            if (videoCacheInfo != null && videoCacheInfo.getCacheType() != CacheType.DOWN_CACHE) {
+                CacheFileInfo cacheFileInfo = new CacheFileInfo(itemFile.getAbsolutePath(), itemFile.lastModified(), StorageUtils.getTotalSize(itemFile));
+                addCache(cacheFileInfo.mFilePath, cacheFileInfo);
+            }
         }
         trimCacheData();
     }
@@ -170,6 +178,7 @@ public class StorageManager {
                 CacheFileInfo cacheFileInfo = item.getValue();
 
                 File file = new File(filePath);
+                LogUtils.d("","deleted:"+filePath+" MaxCacheSize:"+mMaxCacheSize+" CurrentSize:"+mCurrentSize);
                 boolean deleted = StorageUtils.deleteFile(file);
                 if (deleted) {
                     mCurrentSize -= cacheFileInfo.mSize;

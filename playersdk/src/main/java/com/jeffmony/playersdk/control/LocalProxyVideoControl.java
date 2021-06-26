@@ -22,6 +22,9 @@ public class LocalProxyVideoControl {
     private BasePlayerImpl mPlayer;
     private String mVideoUrl;
 
+    private Boolean isCancel = false;
+
+
     private IVideoCacheListener mListener = new IVideoCacheListener() {
         @Override
         public void onCacheStart(VideoCacheInfo cacheInfo) {
@@ -62,17 +65,16 @@ public class LocalProxyVideoControl {
     }
 
     public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, String trackId, Map<String, String> headers, Map<String, Object> extraParams) {
+        if (isCancel) return;
         mVideoUrl = videoUrl;
+        LogUtils.d("","ijk cache start  MD5:"+ProxyCacheUtils.computeMD5(videoUrl)+ " url:"+videoUrl);
         VideoProxyCacheManager.getInstance().addCacheListener(videoUrl, mListener);
         VideoProxyCacheManager.getInstance().setPlayingUrlMd5(ProxyCacheUtils.computeMD5(videoUrl));
         VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, cacheMode, albumId, trackId, headers, extraParams);
     }
 
     public void startRequestVideoInfo(String videoUrl, Map<String, String> headers, Map<String, Object> extraParams) {
-        mVideoUrl = videoUrl;
-        VideoProxyCacheManager.getInstance().addCacheListener(videoUrl, mListener);
-        VideoProxyCacheManager.getInstance().setPlayingUrlMd5(ProxyCacheUtils.computeMD5(videoUrl));
-        VideoProxyCacheManager.getInstance().startRequestVideoInfo(videoUrl, CacheType.UNKNOWN, null, null, headers, extraParams);
+        startRequestVideoInfo(videoUrl, CacheType.UNKNOWN, null, null, headers, extraParams);
     }
 
     public void pauseLocalProxyTask() {
@@ -94,7 +96,12 @@ public class LocalProxyVideoControl {
     }
 
     public void releaseLocalProxyResources() {
-        VideoProxyCacheManager.getInstance().stopCacheTask(mVideoUrl);   //停止视频缓存任务
-        VideoProxyCacheManager.getInstance().releaseProxyReleases(mVideoUrl);
+        isCancel = true;
+        if (mVideoUrl != null && !mVideoUrl.isEmpty()) {
+            LogUtils.d("","ijk cache release MD5:"+ProxyCacheUtils.computeMD5(mVideoUrl)+ " url:"+mVideoUrl);
+//            VideoProxyCacheManager.getInstance().stopCacheTask(mVideoUrl);   //停止视频缓存任务
+//            VideoProxyCacheManager.getInstance().releaseProxyReleases(mVideoUrl);
+        }
+
     }
 }

@@ -2,6 +2,8 @@ package com.jeffmony.videocache.utils;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.jeffmony.videocache.model.VideoCacheInfo;
 
 import java.io.File;
@@ -34,7 +36,7 @@ public class StorageUtils {
     }
 
     public static File getCacheDirectory(Context context, String child) {
-        File appCacheDir = new File("/data/data/" + context.getPackageName() + "/files/"+child);
+        File appCacheDir = new File("/data/data/" + context.getPackageName() + "/files/" + child);
         if (appCacheDir == null) {
             appCacheDir = context.getCacheDir();
         }
@@ -45,11 +47,12 @@ public class StorageUtils {
         return appCacheDir;
     }
 
+    @Nullable
     public static VideoCacheInfo readVideoCacheInfo(File dir) {
         LogUtils.i(TAG, "readVideoCacheInfo : dir=" + dir.getAbsolutePath());
         File file = new File(dir, INFO_FILE);
         if (!file.exists()) {
-            LogUtils.i(TAG,"readProxyCacheInfo failed, file not exist.");
+            LogUtils.i(TAG, "readProxyCacheInfo failed, file not exist.");
             return null;
         }
         ObjectInputStream fis = null;
@@ -60,7 +63,7 @@ public class StorageUtils {
                 return info;
             }
         } catch (Exception e) {
-            LogUtils.w(TAG,"readVideoCacheInfo failed, exception=" + e.getMessage());
+            LogUtils.w(TAG, "readVideoCacheInfo failed, exception=" + e.getMessage());
         } finally {
             ProxyCacheUtils.close(fis);
         }
@@ -68,6 +71,9 @@ public class StorageUtils {
     }
 
     public static void saveVideoCacheInfo(VideoCacheInfo info, File dir) {
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
         File file = new File(dir, INFO_FILE);
         ObjectOutputStream fos = null;
         try {
@@ -76,61 +82,10 @@ public class StorageUtils {
                 fos.writeObject(info);
             }
         } catch (Exception e) {
-            LogUtils.w(TAG,"saveVideoCacheInfo failed, exception=" + e.getMessage());
+            LogUtils.w(TAG, "saveVideoCacheInfo failed, exception=" + e.getMessage());
         } finally {
             ProxyCacheUtils.close(fos);
         }
-    }
-
-    public static boolean deleteAllFiles(String path) {
-        File file = new File(path);
-        if (!file.exists()) return false;
-        if (file.isFile()) {
-            file.delete();
-            return true;
-        }
-        File[] files = file.listFiles();
-        LogUtils.d("MainActivity", "fileList：" + (files == null ? "files = null" : files.length));
-        if (files == null || files.length == 0) return false;
-        for (File f : files) {
-            if (f.isDirectory()) {
-                LogUtils.d("MainActivity", "isDirectory");
-                deleteAllFiles(f.getAbsolutePath());
-            } else {
-                LogUtils.d("MainActivity", "deleteFile：" + f.getAbsolutePath());
-                f.delete();
-            }
-        }
-        return true;
-    }
-
-    public static boolean deleteFile(int cachemode) {
-        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
-        if (!file.exists()) return false;
-        File[] files = file.listFiles();
-        for (File f : files) {
-            if (!f.exists()) return false;
-            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
-            if (videoCacheInfo.getCacheType() == cachemode) {
-                deleteAllFiles(f.getAbsolutePath());
-            }
-        }
-        return true;
-    }
-
-    public static boolean deleteFile(String albumId) {
-        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
-        if (!file.exists()) return false;
-        File[] files = file.listFiles();
-        for (File f : files) {
-            if (!f.exists()) return false;
-            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
-            if (videoCacheInfo == null) return false;
-            if (videoCacheInfo.getAlbumId() == albumId) {
-                deleteAllFiles(f.getAbsolutePath());
-            }
-        }
-        return true;
     }
 
     /**
@@ -217,5 +172,56 @@ public class StorageUtils {
         } else {
             tempFile.delete();
         }
+    }
+
+    public static boolean deleteAllFiles(String path) {
+        File file = new File(path);
+        if (!file.exists()) return false;
+        if (file.isFile()) {
+            file.delete();
+            return true;
+        }
+        File[] files = file.listFiles();
+        LogUtils.d("MainActivity", "fileList：" + (files == null ? "files = null" : files.length));
+        if (files == null || files.length == 0) return false;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                LogUtils.d("MainActivity", "isDirectory");
+                deleteAllFiles(f.getAbsolutePath());
+            } else {
+                LogUtils.d("MainActivity", "deleteFile：" + f.getAbsolutePath());
+                f.delete();
+            }
+        }
+        return true;
+    }
+
+    public static boolean deleteFile(int cachemode) {
+        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
+        if (!file.exists()) return false;
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (!f.exists()) return false;
+            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
+            if (videoCacheInfo.getCacheType() == cachemode) {
+                deleteAllFiles(f.getAbsolutePath());
+            }
+        }
+        return true;
+    }
+
+    public static boolean deleteFile(String albumId) {
+        File file = new File(ProxyCacheUtils.getConfig().getFilePath());
+        if (!file.exists()) return false;
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (!f.exists()) return false;
+            VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(f);
+            if (videoCacheInfo == null) return false;
+            if (videoCacheInfo.getAlbumId() == albumId) {
+                deleteAllFiles(f.getAbsolutePath());
+            }
+        }
+        return true;
     }
 }

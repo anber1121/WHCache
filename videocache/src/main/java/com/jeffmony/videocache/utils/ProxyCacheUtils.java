@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+
 import com.jeffmony.videocache.common.VideoCacheConfig;
 import com.jeffmony.videocache.common.VideoMime;
 import com.jeffmony.videocache.common.VideoParams;
@@ -85,6 +87,7 @@ public class ProxyCacheUtils {
         }
     }
 
+    @Nullable
     public static String computeSub(String string) {
         int endUrl = string.indexOf("?dis_k=");
 //        return string;

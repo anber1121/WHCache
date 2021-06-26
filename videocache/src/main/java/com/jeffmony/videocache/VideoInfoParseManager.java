@@ -4,8 +4,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.jeffmony.videocache.common.VideoCacheException;
-import com.jeffmony.videocache.common.VideoType;
 import com.jeffmony.videocache.common.VideoParams;
+import com.jeffmony.videocache.common.VideoType;
 import com.jeffmony.videocache.listener.IVideoInfoParsedListener;
 import com.jeffmony.videocache.listener.VideoInfoParsedListener;
 import com.jeffmony.videocache.m3u8.M3U8;

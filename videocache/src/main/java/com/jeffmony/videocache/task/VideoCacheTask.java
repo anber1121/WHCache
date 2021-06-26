@@ -38,7 +38,7 @@ public abstract class VideoCacheTask {
         mTotalSize = cacheInfo.getTotalSize();
         mSaveDir = new File(cacheInfo.getSavePath());
         if (!mSaveDir.exists()) {
-            mSaveDir.mkdir();
+            mSaveDir.mkdirs();
         }
     }
 

@@ -45,7 +45,7 @@ public class Mp4VideoCacheThread implements Runnable {
         mMd5 = ProxyCacheUtils.computeMD5(url);
         mSaveDir = new File(filePath);
         if (!mSaveDir.exists()) {
-            mSaveDir.mkdir();
+            mSaveDir.mkdirs();
         }
     }
 
@@ -141,6 +141,10 @@ public class Mp4VideoCacheThread implements Runnable {
     private void downloadVideo() {
         File videoFile;
         try {
+            if (!mSaveDir.exists()) {
+                mSaveDir.mkdirs();
+            }
+            LogUtils.d("","SaveDir.exists:"+mSaveDir.exists());
             videoFile = new File(mSaveDir, mMd5 + StorageUtils.NON_M3U8_SUFFIX);
             if (!videoFile.exists()) {
                 videoFile.createNewFile();

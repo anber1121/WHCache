@@ -135,7 +135,7 @@ public class VideoProxyCacheManager {
         }
 
         public Builder setMaxCacheSize(long maxCacheSize) {
-            mMaxCacheSize = maxCacheSize;
+            mMaxCacheSize = Math.abs(maxCacheSize);
             return this;
         }
 
@@ -322,14 +322,16 @@ public class VideoProxyCacheManager {
      *                    详情见VideoParams
      */
     public void startRequestVideoInfo(String videoUrl, int cacheMode, String albumId, String trackId, Map<String, String> headers, Map<String, Object> extraParams) {
-        StorageManager.getInstance().initCacheInfo();
+        if (cacheMode != CacheType.DOWN_CACHE) {
+            LogUtils.d("","cacheMode:"+cacheMode+" md5:"+ProxyCacheUtils.computeMD5(videoUrl)+" videoUrl:"+videoUrl);
+            StorageManager.getInstance().initCacheInfo();
+        }
         String md5 = ProxyCacheUtils.computeMD5(videoUrl);
         File saveDir = new File(ProxyCacheUtils.getConfig().getFilePath(), md5);
         if (!saveDir.exists()) {
-            saveDir.mkdir();
+            saveDir.mkdirs();
         }
         VideoCacheInfo videoCacheInfo = StorageUtils.readVideoCacheInfo(saveDir);
-        LogUtils.i(TAG, "startRequestVideoInfo " + videoCacheInfo);
         if (videoCacheInfo == null) {
             //之前没有缓存信息
             videoCacheInfo = new VideoCacheInfo(videoUrl);
