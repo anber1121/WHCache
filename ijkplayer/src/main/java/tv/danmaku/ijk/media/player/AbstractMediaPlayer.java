@@ -17,6 +17,8 @@
 
 package tv.danmaku.ijk.media.player;
 
+import android.os.Message;
+
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
 @SuppressWarnings("WeakerAccess")
@@ -30,6 +32,7 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
     private OnErrorListener mOnErrorListener;
     private OnInfoListener mOnInfoListener;
     private OnTimedTextListener mOnTimedTextListener;
+    private OnLogListener mOnLogListener;
 
     public final void setOnPreparedListener(OnPreparedListener listener) {
         mOnPreparedListener = listener;
@@ -68,6 +71,10 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
 
     public final void setOnTimedTextListener(OnTimedTextListener listener) {
         mOnTimedTextListener = listener;
+    }
+
+    public final void setOnLogListener(OnLogListener listener) {
+        mOnLogListener = listener;
     }
 
     public void resetListeners() {
@@ -128,6 +135,11 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
     protected final void notifyOnTimedText(IjkTimedText text) {
         if (mOnTimedTextListener != null)
             mOnTimedTextListener.onTimedText(this, text);
+    }
+
+    protected final void notifyOnLog(Message msg) {
+        if (mOnLogListener != null)
+            mOnLogListener.onLog(this, msg);
     }
 
     public void setDataSource(IMediaDataSource mediaDataSource) {

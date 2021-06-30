@@ -2,6 +2,7 @@ package com.jeffmony.playersdk;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Message;
 import android.view.Surface;
 
 import com.jeffmony.playersdk.common.PlayerSettings;
@@ -54,6 +55,8 @@ public interface IPlayer {
 
     void setOnPreparedListener(OnPreparedListener listener);
 
+    void setOnLogListener(OnLogListener listener);
+
     void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener);
 
     void setOnErrorListener(OnErrorListener listener);
@@ -87,6 +90,10 @@ public interface IPlayer {
 
     interface OnRendListener {
         void onRend(String text);
+    }
+
+    interface OnLogListener {
+        void onLog(Message msg);
     }
 
     interface OnInfoListener {

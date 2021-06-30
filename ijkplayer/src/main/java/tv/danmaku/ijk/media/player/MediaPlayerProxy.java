@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -294,6 +295,21 @@ public class MediaPlayerProxy implements IMediaPlayer {
             });
         } else {
             mBackEndMediaPlayer.setOnTimedTextListener(null);
+        }
+    }
+
+    @Override
+    public void setOnLogListener(OnLogListener listener) {
+        if (listener != null) {
+            final OnLogListener finalListener = listener;
+            mBackEndMediaPlayer.setOnLogListener(new OnLogListener() {
+                @Override
+                public void onLog(IMediaPlayer mp, Message msg) {
+                    finalListener.onLog(MediaPlayerProxy.this, msg);
+                }
+            });
+        } else {
+            mBackEndMediaPlayer.setOnLogListener(null);
         }
     }
 

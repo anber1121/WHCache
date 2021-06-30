@@ -62,6 +62,7 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     private void initPlayerListeners() {
         mIjkPlayer.setOnPreparedListener(mOnPreparedListener);
         mIjkPlayer.setOnTimedTextListener(onRendListener);
+        mIjkPlayer.setOnLogListener(onLogListener);
         mIjkPlayer.setOnErrorListener(mOnErrorListener);
         mIjkPlayer.setOnInfoListener(mOnInfoListener);
         mIjkPlayer.setOnCompletionListener(mCompletionListener);
@@ -213,4 +214,6 @@ public class IjkPlayerImpl extends BasePlayerImpl {
     };
 
     private IjkMediaPlayer.OnTimedTextListener onRendListener = (mp, text) -> notifyOnRend(text);
+
+    private IjkMediaPlayer.OnLogListener onLogListener = (mp, msg) -> notifyOnLog(msg);
 }

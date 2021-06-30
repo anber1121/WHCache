@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -143,6 +144,8 @@ public interface IMediaPlayer {
 
     void setOnTimedTextListener(OnTimedTextListener listener);
 
+    void setOnLogListener(OnLogListener listener);
+
     /*--------------------
      * Listeners
      */
@@ -182,6 +185,10 @@ public interface IMediaPlayer {
 
     interface OnTimedTextListener {
         void onTimedText(IMediaPlayer mp, IjkTimedText text);
+    }
+
+    interface OnLogListener {
+        void onLog(IMediaPlayer mp, Message msg);
     }
 
     /*--------------------

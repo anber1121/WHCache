@@ -2,6 +2,7 @@ package com.jeffmony.playersdk.impl;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Message;
 import android.view.Surface;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public abstract class BasePlayerImpl {
     private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     private IPlayer.OnErrorListener mOnErrorListener;
     private IPlayer.OnRendListener mOnRendListener;
+    private IPlayer.OnLogListener mOnLogListener;
     private IPlayer.OnInfoListener mOnInfoListener;
     private IPlayer.OnCompletionListener mOnCompletionListener;
     private IPlayer.OnProxyCacheInfoListener mOnProxyCacheInfoListener;
@@ -98,6 +100,10 @@ public abstract class BasePlayerImpl {
         mOnRendListener = listener;
     }
 
+    public void setOnLogListener(IPlayer.OnLogListener listener) {
+        mOnLogListener = listener;
+    }
+
     public void setOnInfoListener(IPlayer.OnInfoListener listener) {
         mOnInfoListener = listener;
     }
@@ -152,6 +158,14 @@ public abstract class BasePlayerImpl {
         VideoProxyThreadUtils.runOnUiThread(() -> {
             if (mOnRendListener != null) {
                 mOnRendListener.onRend(text.getText());
+            }
+        });
+    }
+
+    protected void notifyOnLog(Message msg) {
+        VideoProxyThreadUtils.runOnUiThread(() -> {
+            if (mOnLogListener != null) {
+                mOnLogListener.onLog(msg);
             }
         });
     }

@@ -126,6 +126,11 @@ public class Player implements IPlayer {
     }
 
     @Override
+    public void setOnLogListener(OnLogListener listener) {
+        mPlayerImpl.setOnLogListener(listener);
+    }
+
+    @Override
     public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener) {
         mPlayerImpl.setOnVideoSizeChangedListener(listener);
     }
