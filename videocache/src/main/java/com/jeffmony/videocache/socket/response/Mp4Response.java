@@ -108,6 +108,7 @@ public class Mp4Response extends BaseResponse {
                     while (bufferLength > 0 && (readLength = randomAccessFile.read(buffer, 0, (int) bufferLength)) != -1) {
                         offset += readLength;
                         outputStream.write(buffer, 0, readLength);
+                        LogUtils.d("","outputStream.write:"+readLength);
                         randomAccessFile.seek(offset);
                         bufferLength = (avilable - offset + 1) > bufferedSize ? bufferedSize : (avilable - offset + 1);
                     }

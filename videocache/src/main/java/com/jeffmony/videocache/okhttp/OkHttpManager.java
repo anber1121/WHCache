@@ -54,30 +54,6 @@ public class OkHttpManager {
         return control;
     }
 
-    public String getFinalUrl(String url, Map<String, String> headers) throws VideoCacheException {
-        if (mHttpControlMap.containsKey(url)) {
-            OkHttpControl control = mHttpControlMap.get(url);
-            if (control != null) {
-                return control.getFinalUrl();
-            } else {
-                control = createOkHttpControl(url, headers, true);
-                mHttpControlMap.put(url, control);
-                return control.getFinalUrl();
-            }
-        } else {
-            OkHttpControl control = createOkHttpControl(url, headers, true);
-            mHttpControlMap.put(url, control);
-            return control.getFinalUrl();
-        }
-    }
-
-    public int getRedirectCount(String url) {
-        if (mHttpControlMap.containsKey(url)) {
-            return mHttpControlMap.get(url).getRedirectCount();
-        }
-        return 0;
-    }
-
     public String getContentType(String url, Map<String, String> headers) throws VideoCacheException {
         if (mHttpControlMap.containsKey(url)) {
             OkHttpControl control = mHttpControlMap.get(url);
@@ -85,11 +61,13 @@ public class OkHttpManager {
                 return control.getContentType();
             } else {
                 control = createOkHttpControl(url, headers, true);
+                LogUtils.d("","getContentType1");
                 mHttpControlMap.put(url, control);
                 return control.getContentType();
             }
         } else {
             OkHttpControl control = createOkHttpControl(url, headers, true);
+            LogUtils.d("","getContentType2");
             mHttpControlMap.put(url, control);
             return control.getContentType();
         }
@@ -102,11 +80,13 @@ public class OkHttpManager {
                 return control.getContentLength();
             } else {
                 control = createOkHttpControl(url, headers, true);
+                LogUtils.d("","getContentLength1");
                 mHttpControlMap.put(url, control);
                 return control.getContentLength();
             }
         } else {
             OkHttpControl control = createOkHttpControl(url, headers, true);
+            LogUtils.d("","getContentLength2");
             mHttpControlMap.put(url, control);
             return control.getContentLength();
         }
@@ -114,14 +94,11 @@ public class OkHttpManager {
 
     public InputStream getResponseBody(String url, Map<String, String> headers, @NonNull IFetchResponseListener listener) throws VideoCacheException {
         OkHttpControl control = createOkHttpControl(url, headers, false);
+        LogUtils.d("","getResponseBody");
         mHttpControlMap.put(url, control);
 
         //一条请求获取body和contentLength两个数据
         listener.onContentLength(control.parseContentLengthFromContentRange());
         return control.getResponseBody();
-    }
-
-    public void remove(String key) {
-        mHttpControlMap.remove(key);
     }
 }

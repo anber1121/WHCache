@@ -28,6 +28,10 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation project(path: ':playersdk')
+    implementation project(path: ':ijkplayer')
     implementation project(path: ':videocache')
+    implementation project(path: ':frame')
 }

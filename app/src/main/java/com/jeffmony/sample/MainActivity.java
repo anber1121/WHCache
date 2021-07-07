@@ -11,10 +11,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.jeffmony.sample.tiktok.TikTok2Activity;
+
 public class MainActivity extends Activity {
 
     private EditText mVideoUrlEditText;
     private Button mVideoPlayBtn;
+    private Button mTiktokPlayBtn;
     private CheckBox mLocalProxyBox;
     private CheckBox mUseOkHttpBox;
 
@@ -32,6 +35,7 @@ public class MainActivity extends Activity {
 
         mVideoUrlEditText = findViewById(R.id.video_url_edit_text);
         mVideoPlayBtn = findViewById(R.id.video_play_btn);
+        mTiktokPlayBtn = findViewById(R.id.tiktok_play_btn);
         mLocalProxyBox = findViewById(R.id.local_proxy_box);
         mUseOkHttpBox = findViewById(R.id.okhttp_box);
         mRadioGroup = findViewById(R.id.player_group);
@@ -67,6 +71,10 @@ public class MainActivity extends Activity {
                 intent.putExtra("player_type", type);
                 startActivity(intent);
             }
+        });
+
+        mTiktokPlayBtn.setOnClickListener(view -> {
+            TikTok2Activity.start(this, 0);
         });
     }
 }

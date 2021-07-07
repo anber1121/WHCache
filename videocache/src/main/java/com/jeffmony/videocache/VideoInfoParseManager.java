@@ -251,6 +251,7 @@ public class VideoInfoParseManager {
 
         try {
             contentLength = OkHttpManager.getInstance().getContentLength(cacheInfo.getVideoUrl(), mHeaders);
+            LogUtils.d("","parseNonM3U8VideoInfoByOkHttp contentLength:"+contentLength);
             if (contentLength > 0) {
                 cacheInfo.setTotalSize(contentLength);
                 mListener.onNonM3U8ParsedFinished(cacheInfo);

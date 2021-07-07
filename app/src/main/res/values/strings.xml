@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">JeffVideoCache</string>
+    <string name="app_name" translatable="false">VideoCache</string>
+    <string name="str_tiktok" translatable="false">tiktok</string>
+    <string name="whplayer_error_message">Something went wrong, please try again later</string>
 </resources>

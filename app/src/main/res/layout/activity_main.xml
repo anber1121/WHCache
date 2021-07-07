@@ -10,7 +10,7 @@
         android:layout_margin="20dp">
         
         <EditText
-            android:text="https://svp-cdn.weread.qq.com/0bf2raacaaaauiapdchuhzpxzcgdeceaaiaa.f1110.m4a?dis_k=2da7c1fb16a5c63060d5eec2db4afd0f&amp;dis_t=1624695697"
+            android:text="https://svp-cdn.weread.qq.com/0bf2xmabqaaasqairfhcmrqhzo6ddc5qagaa.f1120.m4a?dis_k=16306f6b5f71688bc42322360b29ab48&amp;dis_t=1625471014"
             android:id="@+id/video_url_edit_text"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -50,6 +50,14 @@
             android:textSize="25sp"
             android:padding="20dp"
             android:text="Play"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/tiktok_play_btn"
+            android:textSize="25sp"
+            android:padding="20dp"
+            android:text="Tiktok"
             android:layout_width="200dp"
             android:layout_height="wrap_content" />
         

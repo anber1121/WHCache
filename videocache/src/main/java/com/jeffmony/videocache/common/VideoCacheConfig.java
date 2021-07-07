@@ -1,5 +1,7 @@
 package com.jeffmony.videocache.common;
 
+import com.jeffmony.videocache.utils.LogUtils;
+
 public class VideoCacheConfig {
 
     private long mExpireTime;      //video cache中的过期时间，超过过期时间采用LRU清理规则清理video cache数据
@@ -53,10 +55,14 @@ public class VideoCacheConfig {
     }
 
     public void setUseOkHttp(boolean useOkHttp) {
+        LogUtils.d("","setUseOkHttp:"+useOkHttp);
         mUseOkHttp = useOkHttp;
     }
 
-    public boolean useOkHttp() { return mUseOkHttp; }
+    public boolean useOkHttp() {
+        LogUtils.d("","useOkHttp:"+mUseOkHttp);
+        return mUseOkHttp;
+    }
 
     public boolean ignoreCert() { return mIgnoreCert; }
 }

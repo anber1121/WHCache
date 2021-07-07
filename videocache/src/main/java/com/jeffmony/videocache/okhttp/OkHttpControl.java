@@ -67,6 +67,7 @@ public class OkHttpControl {
     private boolean shouldRedirect() {
         if (mResponse == null) return false;
         int code = mResponse.code();
+
         if (code == 300 || code == 301 || code == 302 || code == 303 || code == 307 || code == 308) {
             String url = mResponse.header("Location");
             if (TextUtils.isEmpty(url)) {

@@ -1,5 +1,6 @@
 include ':playersdk'
 include ':ijkplayer'
+include ':frame'
 include ':videocache'
 include ':app'
-rootProject.name = "JeffVideoCache"
+rootProject.name = "VideoCache"

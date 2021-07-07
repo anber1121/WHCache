@@ -119,6 +119,7 @@ public class VideoPlayActivity extends Activity {
         mPlayer.initPlayerSettings(playerSettings);
 
         mPlayer.setOnPreparedListener(mOnPreparedListener);
+        mPlayer.setOnLogListener(mOnLogListener);
         mPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
         mPlayer.setSurface(mSurface);
         try {
@@ -164,6 +165,13 @@ public class VideoPlayActivity extends Activity {
             mPlayer.start();
 
             updatePlayerBtn();
+        }
+    };
+
+    private IPlayer.OnLogListener mOnLogListener = new IPlayer.OnLogListener() {
+        @Override
+        public void onLog(Message msg) {
+            LogUtils.d("","what"+msg.what+"arg1"+msg.arg1);
         }
     };
 
